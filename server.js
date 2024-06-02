@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+import DonationForm from "./src/DonationForm";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -46,7 +47,8 @@ app.post("/api/makepayment", async (req, res) => {
 
 // Route pour l'URL racine
 app.get("/", (req, res) => {
-  res.send("Welcome to the Donation App");
+  res.send(<DonationForm />);
+  //   res.send("Welcome to the Donation App");
 });
 
 app.listen(port, () => {
