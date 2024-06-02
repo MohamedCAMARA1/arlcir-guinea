@@ -1,6 +1,5 @@
 const express = require("express");
 const axios = require("axios");
-const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -10,9 +9,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "build")));
-
+// Endpoint pour effectuer le paiement
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
@@ -21,12 +18,13 @@ app.post("/api/makepayment", async (req, res) => {
     firstname,
     lastname,
     phone,
-    merchantID: "GN1300014",
-    uniqueID: "888484488",
-    description: "Donation",
+    merchantID: "NG0700144",
+    uniqueID: "247483395",
+    description: "Test description",
     amount,
-    returnUrl: req.headers.origin,
-    hash: "54baaad4453f623198eda36fd6bfadaa1e7719dfd386b7aba6f2658d63238e1a0e7d1233472f5cfacbb37a658eaf5b", // Calculer le hash HMAC
+    successReturnUrl: "https://xyz.com/success-page",
+    cancelReturnUrl: "https://xyz.com/cancel-page",
+    failureReturnUrl: "https://xyz.com/failure-page",
   };
 
   try {
@@ -36,21 +34,14 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": "b4566c050d87373278530f209586a0bd91d13",
+          "Secret-Key": "99f3d937d8043faaa6b2c346dfcddbc41b269cef",
         },
       }
     );
     res.json(response.data);
   } catch (error) {
-    res
-      .status(error.response ? error.response.status : 500)
-      .json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
-});
-
-// The "catchall" handler: for any request that doesn't match the above, send back React's index.html file.
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 app.listen(port, () => {
