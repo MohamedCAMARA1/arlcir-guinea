@@ -22,7 +22,7 @@ app.post("/api/makepayment", async (req, res) => {
     firstname,
     lastname,
     phone,
-    merchantID: "NG0700144",
+    merchantID: "GN1300014",
     uniqueID: "247483395",
     description: "Test description",
     amount,
@@ -33,12 +33,12 @@ app.post("/api/makepayment", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://main.testinstantbillspay.com.ng/instantpay/payload/bill/makepayment",
+      "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment",
       data,
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": "99f3d937d8043faaa6b2c346dfcddbc41b269cef",
+          "Secret-Key": "b4566c050d87373278530f209586a0bd91d13",
         },
       }
     );
