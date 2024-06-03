@@ -23,7 +23,7 @@ app.post("/api/makepayment", async (req, res) => {
     lastname,
     phone,
     merchantID: "GN1300014",
-    uniqueID: "247483395",
+    uniqueID: "247483396",
     description: "Test description",
     amount,
     successReturnUrl: "https://xyz.com/success-page",
