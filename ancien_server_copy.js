@@ -40,6 +40,7 @@ app.post("/api/makepayment", async (req, res) => {
     description,
     amount,
     returnUrl,
+    hash,
   };
 
   try {
@@ -49,7 +50,6 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": hash,
         },
       }
     );
