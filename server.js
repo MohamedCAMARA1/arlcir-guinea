@@ -3,7 +3,7 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
-const crypto = require("crypto"); // Ajout du module crypto
+const crypto = require("crypto");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,12 +18,15 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
-  // Création de la chaîne à hacher
-  const stringToHash = `${email}${firstname}${lastname}GN1300014347483396${amount}`;
+  const merchantID = "GN1300014";
+  const uniqueID = "647483396";
+  const description = "Test description";
+  const returnUrl = "https://xyz.com/success-page";
+  const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
-  // Création du hash HMAC-SHA512
+  const stringToHash = `${email}${firstname}${lastname}${merchantID}${uniqueID}${amount}`;
   const hash = crypto
-    .createHmac("sha512", "b4566c050d87373278530f209586a0bd91d13")
+    .createHmac("sha512", secretKey)
     .update(stringToHash)
     .digest("hex");
 
@@ -32,18 +35,23 @@ app.post("/api/makepayment", async (req, res) => {
     firstname,
     lastname,
     phone,
-    merchantID: "GN13",
-    uniqueID: "377483396",
-    description: "DON ONG",
+    merchantID,
+    uniqueID,
+    description,
     amount,
-    returnUrl: "https://xyz.com/success-page",
-    hash, // Ajout du hash dans les données à envoyer
+    returnUrl,
+    hash,
   };
 
   try {
     const response = await axios.post(
-      "https://gn.instantbillspay.com/instantpay/payload/bill/payment", // Modification de l'URL de l'endpoint
-      data
+      "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     res.json(response.data);
   } catch (error) {
