@@ -1,14 +1,17 @@
-import DonationForm from "./src/DonationForm";
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "build")));
 
 // Endpoint pour effectuer le paiement
 app.post("/api/makepayment", async (req, res) => {
@@ -46,9 +49,8 @@ app.post("/api/makepayment", async (req, res) => {
 });
 
 // Route pour l'URL racine
-app.get("/", (req, res) => {
-  res.send(<DonationForm />);
-  //   res.send("Welcome to the Donation App");
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 app.listen(port, () => {
