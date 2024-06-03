@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
-  const merchantID = "GN1300014";
+  const merchantID = "GN13";
   const uniqueID = "647483396";
   const description = "Test description";
   const returnUrl = "https://xyz.com/success-page";
