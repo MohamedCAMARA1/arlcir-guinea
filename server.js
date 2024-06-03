@@ -33,7 +33,7 @@ app.post("/api/makepayment", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://xx.instantbillspay.com/instantpay/payload/bill/makepayment",
+      " https://zm.instantbillspay.com/instantpay/payload/bill/makepayment",
       data,
       {
         headers: {
