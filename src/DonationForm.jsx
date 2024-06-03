@@ -34,7 +34,8 @@ const DonationForm = () => {
   };
 
   if (paymentUrl) {
-    return <p>Please wait, redirecting to payment gateway...</p>;
+    // Redirige l'utilisateur vers l'URL de paiement
+    window.location.href = paymentUrl;
   }
 
   return (
