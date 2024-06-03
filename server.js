@@ -24,12 +24,16 @@ app.post("/api/makepayment", async (req, res) => {
   const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
   const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
+  // Création du string à hacher
   const stringToHash = `${email}${firstname}${lastname}${merchantID}${uniqueID}${amount}`;
+
+  // Génération du hash
   const hash = crypto
-    .createHmac("sha512", stringToHash)
-    .update(secretKey)
+    .createHmac("sha512", secretKey)
+    .update(stringToHash)
     .digest("hex");
 
+  // Données à envoyer
   const data = {
     email,
     firstname,
@@ -40,7 +44,6 @@ app.post("/api/makepayment", async (req, res) => {
     description,
     amount,
     returnUrl,
-    hash,
   };
 
   try {
@@ -50,6 +53,8 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
+          "Secret-Key": secretKey, // Envoi du Secret-Key comme en-tête
+          Hash: hash, // Envoi du hash comme en-tête
         },
       }
     );
