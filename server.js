@@ -23,7 +23,7 @@ app.post("/api/makepayment", async (req, res) => {
     lastname,
     phone,
     merchantID: "GN1300014",
-    uniqueID: "247483396",
+    uniqueID: "347483396",
     description: "Test description",
     amount,
     successReturnUrl: "https://xyz.com/success-page",
@@ -33,7 +33,7 @@ app.post("/api/makepayment", async (req, res) => {
 
   try {
     const response = await axios.post(
-      " https://zm.instantbillspay.com/instantpay/payload/bill/makepayment",
+      "https://zm.instantbillspay.com/instantpay/payload/bill/makepayment",
       data,
       {
         headers: {
