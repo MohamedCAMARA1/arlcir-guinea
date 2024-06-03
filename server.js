@@ -22,6 +22,8 @@ app.post("/api/makepayment", async (req, res) => {
   const uniqueID = "167483396";
   const description = "DON ONG ARLCIR";
   const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
+  const successReturnUrl =
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success"; // Ajout du paramètre manquant
   const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
   // Création du string à hacher
@@ -44,6 +46,7 @@ app.post("/api/makepayment", async (req, res) => {
     description,
     amount,
     returnUrl,
+    successReturnUrl, // Ajout du paramètre manquant
   };
 
   try {
