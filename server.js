@@ -59,14 +59,12 @@ app.post("/api/makepayment", async (req, res) => {
   try {
     const response = await axios.post(
       "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment",
-      data
-      //, {
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     "Secret-Key": secretKey,
-      //     Hash: hash,
-      //   },
-      // }
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     res.json(response.data);
   } catch (error) {
