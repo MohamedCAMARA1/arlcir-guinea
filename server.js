@@ -48,7 +48,7 @@ app.post("/api/makepayment", async (req, res) => {
     uniqueID,
     description,
     amount,
-    hash
+    hash,
     successReturnUrl, // Ajout du paramètre manquant
     cancelReturnUrl,
     failureReturnUrl,
