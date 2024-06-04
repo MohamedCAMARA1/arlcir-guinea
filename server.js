@@ -55,8 +55,8 @@ app.post("/api/makepayment", async (req, res) => {
     amount,
     returnUrl,
     successReturnUrl,
-    cancelReturnUrl,
-    failureReturnUrl,
+    // cancelReturnUrl,
+    // failureReturnUrl,
     hash,
   };
 
@@ -73,7 +73,7 @@ app.post("/api/makepayment", async (req, res) => {
     );
     res.json(response.data);
   } catch (error) {
-    console.log(
+    console.error(
       "Error making payment:",
       error.response ? error.response.data : error.message
     );
