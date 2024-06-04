@@ -61,7 +61,7 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": secretKey,
+          // "Secret-Key": secretKey,
           // Hash: hash,
         },
       }
