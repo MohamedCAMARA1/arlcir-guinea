@@ -48,6 +48,7 @@ app.post("/api/makepayment", async (req, res) => {
     uniqueID,
     description,
     amount,
+    hash
     successReturnUrl, // Ajout du paramètre manquant
     cancelReturnUrl,
     failureReturnUrl,
@@ -60,8 +61,8 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": secretKey, // Envoi du Secret-Key comme en-tête
-          Hash: hash, // Envoi du hash comme en-tête
+          "Secret-Key": secretKey,
+          // Hash: hash,
         },
       }
     );
