@@ -18,16 +18,10 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
-  const merchantID = "GN1300014";
-  const uniqueID = "167889396";
+  const merchantID = "GN1300014"; // Assurez-vous que l'ID est correct
+  const uniqueID = "167889396"; // Assurez-vous que l'ID unique est correct
   const description = "DON ONG ARLCIR";
-  const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
-  const successReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success";
-  const cancelReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/cancel";
-  const failureReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/failure";
+  const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com"; // Assurez-vous que l'URL est correcte
 
   const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
@@ -40,6 +34,9 @@ app.post("/api/makepayment", async (req, res) => {
     .update(stringToHash)
     .digest("hex");
 
+  console.log("String to hash:", stringToHash);
+  console.log("Generated hash:", hash);
+
   // Données à envoyer
   const data = {
     email,
@@ -51,9 +48,6 @@ app.post("/api/makepayment", async (req, res) => {
     description,
     amount,
     returnUrl,
-    successReturnUrl,
-    cancelReturnUrl,
-    failureReturnUrl,
     hash,
   };
 
@@ -70,8 +64,13 @@ app.post("/api/makepayment", async (req, res) => {
     );
     res.json(response.data);
   } catch (error) {
-    console.error("Error making payment:", error); // Log the error to diagnose the issue
-    res.status(500).json({ message: error.message });
+    console.error(
+      "Error making payment:",
+      error.response ? error.response.data : error.message
+    );
+    res
+      .status(500)
+      .json({ message: error.response ? error.response.data : error.message });
   }
 });
 
