@@ -19,8 +19,9 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
-  const merchantID = "GN1300014";
-  const uniqueID = "167483396";
+  // const merchantID = "GN1300014";
+  const merchantID = "GN13";
+  const uniqueID = "167889396";
   const description = "DON ONG ARLCIR";
   // const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
   // const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
