@@ -23,20 +23,22 @@ app.post("/api/makepayment", async (req, res) => {
   const uniqueID = "167483396";
   const description = "DON ONG ARLCIR";
   // const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
-  const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
+  // const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
   const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com"; // Ajout du paramètre manquant
-  const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com"; // Ajout du paramètre manquant
+  // const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
 
-  const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
+  // const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
   // Création du string à hacher
-  const stringToHash = `${email}${firstname}${lastname}${merchantID}${uniqueID}${amount}`;
+  // const stringToHash = `${email}${firstname}${lastname}${merchantID}${uniqueID}${amount}`;
 
   // Génération du hash
-  const hash = crypto
-    .createHmac("sha512", secretKey)
-    .update(stringToHash)
-    .digest("hex");
+  // const hash = crypto
+  //   .createHmac("sha512", secretKey)
+  //   .update(stringToHash)
+  //   .digest("hex");
+  const hash =
+    "54baaad4453f623198eda36fd6bfadaa1e7719dfd386b7aba6f2658d63238e1a0e7d1233472f5cfacbb37a658eaf5b";
 
   // Données à envoyer
   const data = {
@@ -49,9 +51,9 @@ app.post("/api/makepayment", async (req, res) => {
     description,
     amount,
     hash,
-    successReturnUrl, // Ajout du paramètre manquant
-    cancelReturnUrl,
-    failureReturnUrl,
+    successReturnUrl,
+    // cancelReturnUrl,
+    // failureReturnUrl,
   };
 
   try {
