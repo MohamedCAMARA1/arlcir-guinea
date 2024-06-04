@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const crypto = require("crypto");
+// const { default: ReturnURL } = require("./src/ReturnURL");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,9 +22,11 @@ app.post("/api/makepayment", async (req, res) => {
   const merchantID = "GN1300014";
   const uniqueID = "167483396";
   const description = "DON ONG ARLCIR";
-  const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
-  const successReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success"; // Ajout du paramètre manquant
+  // const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
+  const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
+  const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com"; // Ajout du paramètre manquant
+  const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com"; // Ajout du paramètre manquant
+
   const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
   // Création du string à hacher
@@ -45,8 +48,9 @@ app.post("/api/makepayment", async (req, res) => {
     uniqueID,
     description,
     amount,
-    returnUrl,
     successReturnUrl, // Ajout du paramètre manquant
+    cancelReturnUrl,
+    failureReturnUrl,
   };
 
   try {
