@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const crypto = require("crypto");
-// const { default: ReturnURL } = require("./src/ReturnURL");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,14 +18,16 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
-  // const merchantID = "GN1300014";
-  const merchantID = "GN13";
+  const merchantID = "GN1300014";
   const uniqueID = "167889396";
   const description = "DON ONG ARLCIR";
   const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
-  // const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
-  // const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
-  // const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
+  const successReturnUrl =
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success";
+  const cancelReturnUrl =
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/cancel";
+  const failureReturnUrl =
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/failure";
 
   const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
@@ -50,10 +51,10 @@ app.post("/api/makepayment", async (req, res) => {
     description,
     amount,
     returnUrl,
+    successReturnUrl,
+    cancelReturnUrl,
+    failureReturnUrl,
     hash,
-    // successReturnUrl,
-    // cancelReturnUrl,
-    // failureReturnUrl,
   };
 
   try {
@@ -63,11 +64,13 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
+          "Secret-Key": secretKey, // Envoi du Secret-Key comme en-tête
         },
       }
     );
     res.json(response.data);
   } catch (error) {
+    console.error("Error making payment:", error); // Log the error to diagnose the issue
     res.status(500).json({ message: error.message });
   }
 });
