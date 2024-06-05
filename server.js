@@ -1,14 +1,12 @@
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
-const cors = require("cors");
-const path = require("path");
 const crypto = require("crypto");
+const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
 app.use(bodyParser.json());
 
 // Serve static files from the React app
@@ -21,8 +19,9 @@ app.post("/api/makepayment", async (req, res) => {
   const merchantID = "GN1300014";
   const uniqueID = "167889396";
   const description = "DON ONG ARLCIR";
-  const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
-  const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
+  const returnUrl =
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/returnUrl";
+  const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13"; // Secret key provided by Instant Bills Pay
 
   const stringToHash = `${email}${firstname}${lastname}${merchantID}${uniqueID}${amount}`;
   const hash = crypto
@@ -43,8 +42,6 @@ app.post("/api/makepayment", async (req, res) => {
     hash,
   };
 
-  console.log("Data to be sent to payment API:", data);
-
   try {
     const response = await axios.post(
       "https://gn.instantbillspay.com/instantpay/payload/bill/payment",
@@ -56,19 +53,13 @@ app.post("/api/makepayment", async (req, res) => {
       }
     );
 
-    console.log("Response from payment API:", response.data);
-
-    // Check if the response
     if (response.data) {
       if (response.status === 200) {
-        // Redirection côté client
-        res
-          .status(302)
-          .setHeader(
-            "Location",
-            "https://gn.instantbillspay.com/instant/preview"
-          )
-          .send();
+        // Extracting Ref from the response
+        const ref = response.data.ref;
+
+        // Redirect to returnUrl with Ref included
+        res.redirect(`${returnUrl}?ref=${ref}`);
       }
     } else {
       console.error("Invalid response structure:", response.data);
@@ -77,13 +68,8 @@ app.post("/api/makepayment", async (req, res) => {
         .json({ message: "Invalid response from payment gateway" });
     }
   } catch (error) {
-    console.error(
-      "Error making payment:",
-      error.response ? error.response.data : error.message
-    );
-    res
-      .status(500)
-      .json({ message: error.response ? error.response.data : error.message });
+    console.error("Error making payment:", error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
