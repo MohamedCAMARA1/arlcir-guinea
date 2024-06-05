@@ -60,7 +60,7 @@ app.post("/api/makepayment", async (req, res) => {
 
     // Check if the response contains HTML content
     if (response.data && response.data.includes("<html>")) {
-      // Render the HTML content directly
+      // Send the full response content as HTML
       res.send(response.data);
     } else if (response.data && response.data.gateway_url) {
       // Redirect to the gateway URL if available
