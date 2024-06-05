@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const crypto = require("crypto");
-const cheerio = require("cheerio"); // Module pour manipuler les données HTML
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,7 +11,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Serve static files from the React-App
+// Serve static files from the React app
 app.use(express.static(path.join(__dirname, "build")));
 
 // Endpoint pour effectuer le paiement
@@ -51,14 +50,12 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": "b4566c050d8737327e8e530ef209586a0bd91d13",
         },
       }
     );
 
-    // Utiliser Cheerio pour extraire l'URL de redirection de la réponse HTML
-    const $ = cheerio.load(response.data);
-    const paymentUrl = $("form").attr("action");
+    // Extraire l'URL de redirection à partir de la réponse JSON
+    const paymentUrl = response.data.gateway_url;
 
     // Rediriger l'utilisateur vers l'URL de paiement
     res.redirect(paymentUrl);
