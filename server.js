@@ -61,8 +61,14 @@ app.post("/api/makepayment", async (req, res) => {
     // Check if the response
     if (response.data) {
       if (response.status === 200) {
-        // Rediriger l'utilisateur vers la nouvelle URL après le paiement
-        res.redirect("https://gn.instantbillspay.com/instant/preview");
+        // Redirection côté client
+        res
+          .status(302)
+          .setHeader(
+            "Location",
+            "https://gn.instantbillspay.com/instant/preview"
+          )
+          .send();
       }
     } else {
       console.error("Invalid response structure:", response.data);
