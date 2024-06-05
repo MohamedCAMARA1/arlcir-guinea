@@ -58,7 +58,7 @@ app.post("/api/makepayment", async (req, res) => {
 
     console.log("Response from payment API:", response.data);
 
-    // Check if the response contains HTML content
+    // Check if the response
     if (response.data) {
       // Send the full response content
       res.send(response.data);
