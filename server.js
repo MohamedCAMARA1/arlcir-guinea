@@ -60,7 +60,9 @@ app.post("/api/makepayment", async (req, res) => {
         },
       }
     );
-    res.json(response.data);
+
+    // Redirection vers la page de paiement
+    res.redirect(response.data.payment_url);
   } catch (error) {
     console.error(
       "Error making payment:",
