@@ -43,6 +43,8 @@ app.post("/api/makepayment", async (req, res) => {
     hash,
   };
 
+  console.log("Data to be sent to payment API:", data);
+
   try {
     const response = await axios.post(
       "https://gn.instantbillspay.com/instantpay/payload/bill/payment",
@@ -54,13 +56,14 @@ app.post("/api/makepayment", async (req, res) => {
       }
     );
 
-    console.log("API Response:", response.data);
+    console.log("Response from payment API:", response.data);
 
     // Assurez-vous que l'URL de redirection est correcte
     if (response.data && response.data.gateway_url) {
       const paymentUrl = response.data.gateway_url;
       res.redirect(paymentUrl);
     } else {
+      console.error("Invalid response structure:", response.data);
       res
         .status(500)
         .json({ message: "Invalid response from payment gateway" });
