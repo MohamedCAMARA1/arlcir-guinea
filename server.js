@@ -59,13 +59,9 @@ app.post("/api/makepayment", async (req, res) => {
     console.log("Response from payment API:", response.data);
 
     // Check if the response contains HTML content
-    if (response.data && response.data.includes("<html>")) {
-      // Send the full response content as HTML
+    if (response.data) {
+      // Send the full response content
       res.send(response.data);
-    } else if (response.data && response.data.gateway_url) {
-      // Redirect to the gateway URL if available
-      const paymentUrl = response.data.gateway_url;
-      res.redirect(paymentUrl);
     } else {
       console.error("Invalid response structure:", response.data);
       res
