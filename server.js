@@ -54,11 +54,17 @@ app.post("/api/makepayment", async (req, res) => {
       }
     );
 
-    // Extraire l'URL de redirection à partir de la réponse JSON
-    const paymentUrl = response.data.gateway_url;
+    console.log("API Response:", response.data);
 
-    // Rediriger l'utilisateur vers l'URL de paiement
-    res.redirect(paymentUrl);
+    // Assurez-vous que l'URL de redirection est correcte
+    if (response.data && response.data.gateway_url) {
+      const paymentUrl = response.data.gateway_url;
+      res.redirect(paymentUrl);
+    } else {
+      res
+        .status(500)
+        .json({ message: "Invalid response from payment gateway" });
+    }
   } catch (error) {
     console.error(
       "Error making payment:",
