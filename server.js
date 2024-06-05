@@ -51,6 +51,7 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
+          "Secret-Key": "b4566c050d8737327e8e530ef209586a0bd91d13",
         },
       }
     );
