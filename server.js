@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const crypto = require("crypto");
+const cheerio = require("cheerio"); // Module pour manipuler les données HTML
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,25 +19,18 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
-  const merchantID = "GN1300014"; // Assurez-vous que l'ID est correct
-  const uniqueID = "167889396"; // Assurez-vous que l'ID unique est correct
+  const merchantID = "GN1300014";
+  const uniqueID = "167889396";
   const description = "DON ONG ARLCIR";
-  const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com"; // Assurez-vous que l'URL est correcte
-  const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13"; // Assurez-vous que la clé est correcte
+  const returnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com";
+  const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13";
 
-  // Création du string à hacher
   const stringToHash = `${email}${firstname}${lastname}${merchantID}${uniqueID}${amount}`;
-
-  // Génération du hash
   const hash = crypto
     .createHmac("sha512", secretKey)
     .update(stringToHash)
     .digest("hex");
 
-  console.log("String to hash:", stringToHash);
-  console.log("Generated hash:", hash);
-
-  // Données à envoyer
   const data = {
     email,
     firstname,
@@ -61,8 +55,12 @@ app.post("/api/makepayment", async (req, res) => {
       }
     );
 
-    // Redirection vers la page de paiement
-    res.redirect(response.data.payment_url);
+    // Utiliser Cheerio pour extraire l'URL de redirection de la réponse HTML
+    const $ = cheerio.load(response.data);
+    const paymentUrl = $("form").attr("action");
+
+    // Rediriger l'utilisateur vers l'URL de paiement
+    res.redirect(paymentUrl);
   } catch (error) {
     console.error(
       "Error making payment:",
