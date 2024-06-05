@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "build")));
 
-// Endpoint to make a payment
+// Endpoint pour effectuer le paiement
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
@@ -83,7 +83,7 @@ app.post("/api/makepayment", async (req, res) => {
   }
 });
 
-// Route for the root URL
+// Route pour l'URL racine
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
