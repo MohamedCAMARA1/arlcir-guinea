@@ -1,6 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
+const crypto = require("crypto");
 const path = require("path");
 
 const app = express();
@@ -15,18 +16,18 @@ app.use(express.static(path.join(__dirname, "build")));
 app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
-  // const merchantID = "GN1300014"; //production
-  const merchantID = "NG0700144","; //Test
+  const merchantID = "GN1300014";
   const uniqueID = "167889396";
   const description = "DON ONG ARLCIR";
-  const successReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success";
-  const cancelReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/cancel";
-  const failureReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/failure";
-  // const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13"; // production
-  const secretKey = "99f3d937d8043faaa6b2c346dfcddbc41b269cef"; // Test
+  const returnUrl =
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/returnUrl";
+  const secretKey = "b4566c050d8737327e8e530ef209586a0bd91d13"; // Secret key provided by Instant Bills Pay
+
+  const stringToHash = `${email}${firstname}${lastname}${merchantID}${uniqueID}${amount}`;
+  const hash = crypto
+    .createHmac("sha512", secretKey)
+    .update(stringToHash)
+    .digest("hex");
 
   const data = {
     email,
@@ -37,33 +38,28 @@ app.post("/api/makepayment", async (req, res) => {
     uniqueID,
     description,
     amount,
-    successReturnUrl,
-    cancelReturnUrl,
-    failureReturnUrl,
+    returnUrl,
+    hash,
   };
 
   try {
     const response = await axios.post(
-      "https://main.testinstantbillspay.com.ng/instantpay/payload/bill/makepayment",
+      "https://gn.instantbillspay.com/instantpay/payload/bill/payment",
       data,
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": secretKey, // Ajouter la clé secrète dans les en-têtes
         },
       }
     );
 
     if (response.data) {
       if (response.status === 200) {
-        // Extracting the gateway_url from the response
-        const gatewayUrl = response.data.gateway_url;
+        // Extracting Ref from the response
+        const ref = response.data.ref;
 
-        // Redirect to the gateway URL
-        res.redirect(gatewayUrl);
-      } else {
-        console.error("Payment initialization failed:", response.data);
-        res.status(response.status).json({ message: response.data.message });
+        // Redirect to returnUrl with Ref included
+        res.redirect(`${returnUrl}?ref=${ref}`);
       }
     } else {
       console.error("Invalid response structure:", response.data);
