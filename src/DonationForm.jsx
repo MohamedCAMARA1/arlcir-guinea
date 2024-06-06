@@ -24,10 +24,8 @@ const DonationForm = () => {
         amount,
       });
 
-      // Si la réponse est 200, cela signifie que la redirection est nécessaire
-      if (response.status === 200) {
-        window.location.href = response.data.gateway_url;
-      }
+      // Si la redirection est nécessaire, elle est gérée côté serveur
+      // Donc, pas besoin de traitement supplémentaire côté client
     } catch (error) {
       setError(error.message);
     }
