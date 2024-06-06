@@ -9,7 +9,6 @@ const DonationForm = () => {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [paymentUrl, setPaymentUrl] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,18 +24,16 @@ const DonationForm = () => {
         amount,
       });
 
-      setPaymentUrl(response.data.gateway_url);
+      // Si la réponse est 200, cela signifie que la redirection est nécessaire
+      if (response.status === 200) {
+        window.location.href = response.data.gateway_url;
+      }
     } catch (error) {
       setError(error.message);
     }
 
     setLoading(false);
   };
-
-  if (paymentUrl) {
-    // Redirige l'utilisateur vers l'URL de paiement
-    window.location.href = paymentUrl;
-  }
 
   return (
     <div>

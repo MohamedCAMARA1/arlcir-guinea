@@ -19,12 +19,9 @@ app.post("/api/makepayment", async (req, res) => {
   const merchantID = "NG0700144";
   const uniqueID = "34354543";
   const description = "DON ONG ARLCIR";
-  const successReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success";
-  const cancelReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/cancel";
-  const failureReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/failure";
+  const successReturnUrl = "https://xyz.com/success-page";
+  const cancelReturnUrl = "https://xyz.com/cancel-page";
+  const failureReturnUrl = "https://xyz.com/failure-page";
   const secretKey = "99f3d937d8043faaa6b2c346dfcddbc41b269cef"; // Test
 
   const data = {
