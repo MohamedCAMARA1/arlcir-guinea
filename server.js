@@ -16,7 +16,7 @@ app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
   // const merchantID = "GN1300014"; //production
-  const merchantID = "NG0700144","; //Test
+  const merchantID = "NG0700144"; //Test
   const uniqueID = "167889396";
   const description = "DON ONG ARLCIR";
   const successReturnUrl =
