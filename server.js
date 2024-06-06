@@ -17,7 +17,7 @@ app.post("/api/makepayment", async (req, res) => {
 
   // Test credentials
   const merchantID = "NG0700144";
-  const uniqueID = "167889396";
+  const uniqueID = "34354543";
   const description = "DON ONG ARLCIR";
   const successReturnUrl =
     "https://arlcir-guinea-87a974c63eec.herokuapp.com/success";
