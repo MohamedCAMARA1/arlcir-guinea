@@ -53,7 +53,10 @@ app.post("/api/makepayment", async (req, res) => {
     if (response.data) {
       if (response.status === 200) {
         // Extracting the gateway_url from the response
-        const gatewayUrl = response.data.gateway_url;
+        let gatewayUrl = response.data.gateway_url;
+
+        // Convertir l'URL de HTTP vers HTTPS
+        gatewayUrl = gatewayUrl.replace("http://", "https://");
 
         // Redirect to the gateway URL
         res.redirect(gatewayUrl);
