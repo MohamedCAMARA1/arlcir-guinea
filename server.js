@@ -2,11 +2,13 @@ const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
+app.use(cors()); // Middleware pour autoriser toutes les requêtes CORS
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "build")));
@@ -45,7 +47,7 @@ app.post("/api/makepayment", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": secretKey, // Ajouter la clé secrète dans les en-têtes
+          "Secret-Key": secretKey,
         },
       }
     );
@@ -53,10 +55,10 @@ app.post("/api/makepayment", async (req, res) => {
     if (response.data) {
       if (response.status === 200) {
         // Extracting the gateway_url from the response
-        let gatewayUrl = response.data.gateway_url;
-
-        // Convertir l'URL de HTTP vers HTTPS
-        gatewayUrl = gatewayUrl.replace("http://", "https://");
+        const gatewayUrl = response.data.gateway_url.replace(
+          "http://",
+          "https://"
+        );
 
         // Redirect to the gateway URL
         res.redirect(gatewayUrl);
