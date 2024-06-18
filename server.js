@@ -18,13 +18,14 @@ app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
   // Test credentials
-  const merchantID = "NG0700144";
+  const merchantID = "GN1300014";
   const uniqueID = "34354543";
   const description = "DON ONG ARLCIR";
-  const successReturnUrl = "https://xyz.com/success-page";
-  const cancelReturnUrl = "https://xyz.com/cancel-page";
-  const failureReturnUrl = "https://xyz.com/failure-page";
-  const secretKey = "99f3d937d8043faaa6b2c346dfcddbc41b269cef"; // Test
+  const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+  const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+  const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+  const DevSecretKey = "99f3d937d8043faaa6b2c346dfcddbc41b269cef"; // Test
+  const ProdSecretKey = "b4566c050d8737327e8e530ef209586a0bd91d13"; // Production
 
   const data = {
     email,
@@ -42,12 +43,12 @@ app.post("/api/makepayment", async (req, res) => {
 
   try {
     const response = await axios.post(
-      "https://main.testinstantbillspay.com.ng/instantpay/payload/bill/makepayment",
+      "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment",
       data,
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": secretKey,
+          "Secret-Key": ProdSecretKey,
         },
       }
     );
