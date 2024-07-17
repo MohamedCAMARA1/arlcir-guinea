@@ -2,32 +2,32 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const DonationForm = () => {
-  const [formData, setFormData] = useState({
-    amount: "",
-    email: "",
-    firstname: "",
-    lastname: "",
-    phone: "",
-  });
+  const [amount, setAmount] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(false);
 
     try {
-      const response = await axios.post("/api/makepayment", formData);
-      if (response.status === 200) {
-        setSuccess(true);
+      const response = await axios.post("/api/makepayment", {
+        email,
+        firstname,
+        lastname,
+        phone,
+        amount,
+      });
+
+      if (response.data && response.data.gatewayUrl) {
+        window.location.href = response.data.gatewayUrl;
+      } else {
+        setError("Failed to initialize payment.");
       }
     } catch (error) {
       setError(error.message);
@@ -40,19 +40,13 @@ const DonationForm = () => {
     <div>
       <h2>Make a Donation</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && (
-        <p style={{ color: "green" }}>
-          Payment initialized successfully. You will be redirected shortly.
-        </p>
-      )}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
           <input
             type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -60,9 +54,8 @@ const DonationForm = () => {
           <label>First Name:</label>
           <input
             type="text"
-            name="firstname"
-            value={formData.firstname}
-            onChange={handleChange}
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
             required
           />
         </div>
@@ -70,9 +63,8 @@ const DonationForm = () => {
           <label>Last Name:</label>
           <input
             type="text"
-            name="lastname"
-            value={formData.lastname}
-            onChange={handleChange}
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
             required
           />
         </div>
@@ -80,9 +72,8 @@ const DonationForm = () => {
           <label>Phone:</label>
           <input
             type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             required
           />
         </div>
@@ -90,14 +81,13 @@ const DonationForm = () => {
           <label>Amount:</label>
           <input
             type="number"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
             required
           />
         </div>
         <button type="submit" disabled={loading}>
-          {loading ? "Processing..." : "Donate"}
+          Donate
         </button>
       </form>
     </div>

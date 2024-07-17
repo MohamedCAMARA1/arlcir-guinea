@@ -54,22 +54,15 @@ app.post("/api/makepayment", async (req, res) => {
       },
     });
 
-    if (response.data) {
-      if (response.status === 200) {
-        const gatewayUrl = response.data.gateway_url.replace(
-          "http://",
-          "https://"
-        );
-        res.redirect(gatewayUrl);
-      } else {
-        console.error("Payment initialization failed:", response.data);
-        res.status(response.status).json({ message: response.data.message });
-      }
+    if (response.data && response.status === 200) {
+      const gatewayUrl = response.data.gateway_url.replace(
+        "http://",
+        "https://"
+      );
+      res.json({ gatewayUrl });
     } else {
-      console.error("Invalid response structure:", response.data);
-      res
-        .status(500)
-        .json({ message: "Invalid response from payment gateway" });
+      console.error("Payment initialization failed:", response.data);
+      res.status(response.status).json({ message: response.data.message });
     }
   } catch (error) {
     console.error("Error making payment:", error.message);
