@@ -2,30 +2,33 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const DonationForm = () => {
-  const [amount, setAmount] = useState("");
-  const [email, setEmail] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [phone, setPhone] = useState("");
+  const [formData, setFormData] = useState({
+    amount: "",
+    email: "",
+    firstname: "",
+    lastname: "",
+    phone: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(false);
 
     try {
-      const response = await axios.post("/api/makepayment", {
-        email,
-        firstname,
-        lastname,
-        phone,
-        amount,
-      });
-
-      // Si la redirection est nécessaire, elle est gérée côté serveur
-      // Donc, pas besoin de traitement supplémentaire côté client
+      const response = await axios.post("/api/makepayment", formData);
+      if (response.status === 200) {
+        setSuccess(true);
+      }
     } catch (error) {
       setError(error.message);
     }
@@ -37,13 +40,19 @@ const DonationForm = () => {
     <div>
       <h2>Make a Donation</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && (
+        <p style={{ color: "green" }}>
+          Payment initialized successfully. You will be redirected shortly.
+        </p>
+      )}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             required
           />
         </div>
@@ -51,8 +60,9 @@ const DonationForm = () => {
           <label>First Name:</label>
           <input
             type="text"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
+            name="firstname"
+            value={formData.firstname}
+            onChange={handleChange}
             required
           />
         </div>
@@ -60,8 +70,9 @@ const DonationForm = () => {
           <label>Last Name:</label>
           <input
             type="text"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
+            name="lastname"
+            value={formData.lastname}
+            onChange={handleChange}
             required
           />
         </div>
@@ -69,8 +80,9 @@ const DonationForm = () => {
           <label>Phone:</label>
           <input
             type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
             required
           />
         </div>
@@ -78,13 +90,14 @@ const DonationForm = () => {
           <label>Amount:</label>
           <input
             type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
             required
           />
         </div>
         <button type="submit" disabled={loading}>
-          Donate
+          {loading ? "Processing..." : "Donate"}
         </button>
       </form>
     </div>

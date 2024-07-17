@@ -3,6 +3,7 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
+require("dotenv").config(); // Assurez-vous d'avoir un fichier .env pour vos clés
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,8 +25,12 @@ app.post("/api/makepayment", async (req, res) => {
   const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
   const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
   const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
-  const DevSecretKey = "99f3d937d8043faaa6b2c346dfcddbc41b269cef"; // Test
-  const ProdSecretKey = "b4566c050d8737327e8e530ef209586a0bd91d13"; // Production
+  const DevSecretKey = process.env.DEV_SECRET_KEY;
+  const ProdSecretKey = process.env.PROD_SECRET_KEY;
+  const ProdUrl =
+    "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment";
+  const TestUrl =
+    "https://main.testinstantbillspay.com.ng/instantpay/payload/bill/makepayment";
 
   const data = {
     email,
@@ -42,26 +47,19 @@ app.post("/api/makepayment", async (req, res) => {
   };
 
   try {
-    const response = await axios.post(
-      "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment",
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Secret-Key": ProdSecretKey,
-        },
-      }
-    );
+    const response = await axios.post(ProdUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "Secret-Key": ProdSecretKey,
+      },
+    });
 
     if (response.data) {
       if (response.status === 200) {
-        // Extracting the gateway_url from the response
         const gatewayUrl = response.data.gateway_url.replace(
           "http://",
           "https://"
         );
-
-        // Redirect to the gateway URL
         res.redirect(gatewayUrl);
       } else {
         console.error("Payment initialization failed:", response.data);
