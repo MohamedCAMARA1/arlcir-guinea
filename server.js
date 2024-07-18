@@ -14,45 +14,64 @@ app.use(bodyParser.json());
 // Servir les fichiers statiques de l'application React
 app.use(express.static(path.join(__dirname, "build")));
 
+// Test credentials
+const merchantID = "GN1300014";
+const uniqueID = uuidv4();
+const description = "DON ONG ARLCIR";
+const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+const devSecretKey = process.env.API_TEST_SECRET_KEY;
+const prodSecretKey = process.env.API_PROD_SECRET_KEY;
+const production_URL = process.env.API_PRODUCTION_URL;
+const developpement_URL = process.env.API_TEST_URL;
+
 // Route POST pour initier un paiement
 app.post("/api/makepayment", async (req, res) => {
+  // const paymentDetails = {
+  //   ...req.body,
+  //   uniqueID: uuidv4(),
+  //   description: "Test Payment",
+  //   returnUrl: req.body.returnUrl,
+  //   failUrl: req.body.failUrl,
+  //   cancelUrl: req.body.cancelUrl,
+  // };
+
   const paymentDetails = {
     ...req.body,
-    uniqueID: uuidv4(),
-    description: "Test Payment",
-    returnUrl: req.body.returnUrl,
-    failUrl: req.body.failUrl,
-    cancelUrl: req.body.cancelUrl,
+    merchantID,
+    uniqueID,
+    description,
+    successReturnUrl,
+    cancelReturnUrl,
+    failureReturnUrl,
   };
-
   try {
     const response = await axios.post(
-      process.env.API_PRODUCTION_URL,
+      production_URL,
       paymentDetails,
+
       {
         headers: {
           "Content-Type": "application/json",
-          "Secret-Key": process.env.API_DEV_SECRET_KEY,
+          "Secret-Key": prodSecretKey,
         },
       }
     );
 
-    if (response.status === 200) {
-      res.json({ status: 200, gateway_url: response.data.gateway_url });
+    if (response.data && response.status === 200) {
+      const gatewayUrl = response.data.gateway_url.replace(
+        "http://",
+        "https://"
+      );
+      res.json({ gatewayUrl });
     } else {
-      res.status(response.status).json({
-        message: "Failed to initiate payment",
-        details: response.data,
-      });
+      console.error("Payment initialization failed:", response.data);
+      res.status(response.status).json({ message: response.data.message });
     }
   } catch (error) {
-    console.error("Error processing payment:", error);
-    if (error.response) {
-      return res
-        .status(error.response.status)
-        .json({ message: error.response.data.message });
-    }
-    res.status(500).json({ message: "Server error processing payment" });
+    console.error("Error making payment:", error.message);
+    res.status(500).json({ message: error.message });
   }
 });
 
