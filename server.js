@@ -1,80 +1,64 @@
+require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
-const path = require("path");
 const cors = require("cors");
-require("dotenv").config(); // Assurez-vous d'avoir un fichier .env pour vos clés
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
 
 const app = express();
-const port = process.env.PORT || 5000;
-
+app.use(cors());
+const PORT = process.env.PORT || 8000;
 app.use(bodyParser.json());
-app.use(cors()); // Middleware pour autoriser toutes les requêtes CORS
 
-// Serve static files from the React app
+// Servir les fichiers statiques de l'application React
 app.use(express.static(path.join(__dirname, "build")));
 
-// Endpoint pour effectuer le paiement
+// Route POST pour initier un paiement
 app.post("/api/makepayment", async (req, res) => {
-  const { email, firstname, lastname, phone, amount } = req.body;
-
-  // Test credentials
-  const merchantID = "GN1300014";
-  const uniqueID = "34354543";
-  const description = "DON ONG ARLCIR";
-  const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
-  const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
-  const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
-  const DevSecretKey = process.env.DEV_SECRET_KEY;
-  const ProdSecretKey = process.env.PROD_SECRET_KEY;
-  const ProdUrl =
-    "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment";
-  const TestUrl =
-    "https://main.testinstantbillspay.com.ng/instantpay/payload/bill/makepayment";
-
-  const data = {
-    email,
-    firstname,
-    lastname,
-    phone,
-    merchantID,
-    uniqueID,
-    description,
-    amount,
-    successReturnUrl,
-    cancelReturnUrl,
-    failureReturnUrl,
+  const paymentDetails = {
+    ...req.body,
+    uniqueID: uuidv4(),
+    description: "Test Payment",
+    returnUrl: req.body.returnUrl,
+    failUrl: req.body.failUrl,
+    cancelUrl: req.body.cancelUrl,
   };
 
   try {
-    const response = await axios.post(ProdUrl, data, {
-      headers: {
-        "Content-Type": "application/json",
-        "Secret-Key": ProdSecretKey,
-      },
-    });
+    const response = await axios.post(
+      process.env.API_PRODUCTION_URL,
+      paymentDetails,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Secret-Key": process.env.API_DEV_SECRET_KEY,
+        },
+      }
+    );
 
-    if (response.data && response.status === 200) {
-      const gatewayUrl = response.data.gateway_url.replace(
-        "http://",
-        "https://"
-      );
-      res.json({ gatewayUrl });
+    if (response.status === 200) {
+      res.json({ status: 200, gateway_url: response.data.gateway_url });
     } else {
-      console.error("Payment initialization failed:", response.data);
-      res.status(response.status).json({ message: response.data.message });
+      res.status(response.status).json({
+        message: "Failed to initiate payment",
+        details: response.data,
+      });
     }
   } catch (error) {
-    console.error("Error making payment:", error.message);
-    res.status(500).json({ message: error.message });
+    console.error("Error processing payment:", error);
+    if (error.response) {
+      return res
+        .status(error.response.status)
+        .json({ message: error.response.data.message });
+    }
+    res.status(500).json({ message: "Server error processing payment" });
   }
 });
 
-// Route pour l'URL racine
+// Pour toutes les autres requêtes, retourner l'application React
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
