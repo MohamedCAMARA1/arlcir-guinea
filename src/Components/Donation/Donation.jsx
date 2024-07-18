@@ -12,9 +12,9 @@ const Donation = () => {
     amount: "",
     description: "Don pour ARLCIR",
     merchantID: "GN1300014",
-    returnUrl: "https://arlcir.com/success-page",
-    failUrl: "https://arlcir.com/failure-page",
-    cancelUrl: "https://arlcir.com/cancel-page",
+    returnUrl: "https://arlcir-guinea-87a974c63eec.herokuapp.com/success-page",
+    failUrl: "https://arlcir-guinea-87a974c63eec.herokuapp.com/failure-page",
+    cancelUrl: "https://arlcir-guinea-87a974c63eec.herokuapp.com/cancel-page",
     anonymous: false,
   });
 
