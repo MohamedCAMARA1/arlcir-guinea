@@ -1,18 +1,18 @@
 // src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Navbar from "./Component/Navbar/Navbar";
-import Home from "./Component/Home/Home";
-import About from "./Component/About/About";
-import Contact from "./Component/Contact/Contact";
-import Donation from "./Component/Donation/Donation";
-import OurAction from "./Component/OurActions/OurActions";
-import Footer from "./Component/Footer/Footer";
-import NousRejoindre from "./Component/JoinUs/JoinUs";
-import SuccessPage from "./Component/Status/SuccessPage";
-import CancelPage from "./Component/Status/CancelPage";
-import FailurePage from "./Component/Status/FailurePage";
-import NotFound from "./Component/NotFound/NotFound";
+import Navbar from "./Components/Navbar/Navbar";
+import Home from "./Components/Home/Home";
+import About from "./Components/About/About";
+import Contact from "./Components/Contact/Contact";
+import Donation from "./Components/Donation/Donation";
+import OurAction from "./Components/OurActions/OurActions";
+import Footer from "./Components/Footer/Footer";
+import NousRejoindre from "./Components/JoinUs/JoinUs";
+import SuccessPage from "./Components/Status/SuccessPage";
+import CancelPage from "./Components/Status/CancelPage";
+import FailurePage from "./Components/Status/FailurePage";
+import NotFound from "./Components/NotFound/NotFound";
 
 import "./App.css";
 
