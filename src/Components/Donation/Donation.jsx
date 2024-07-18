@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { ClipLoader } from "react-spinners"; // Import du composant ClipLoader
 import donation_hands from "../../Assets/donation_hands.jpeg";
 
 const DonationForm = () => {
@@ -95,7 +95,9 @@ const DonationForm = () => {
               <input
                 type="number"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                // on conserve la raie valeur saisie pr l'utilisateur en divisant par 1O0
+                // il y a un rapport de 1/100
+                onChange={(e) => setAmount(e.target.value / 100)}
                 placeholder="Montant"
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -105,7 +107,11 @@ const DonationForm = () => {
                 className="w-full py-2 text-white bg-blue-800 rounded hover:bg-blue-900"
                 disabled={loading}
               >
-                {loading ? "Chargement..." : "Faire un Don"}
+                {loading ? (
+                  <ClipLoader size={20} color={"#ffffff"} loading={loading} /> // Animation ClipLoader pendant le chargement
+                ) : (
+                  "Faire un Don"
+                )}
               </button>
             </form>
           </div>
