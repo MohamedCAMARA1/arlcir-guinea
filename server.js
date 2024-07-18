@@ -1,63 +1,56 @@
-require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
-const cors = require("cors");
-const { v4: uuidv4 } = require("uuid");
 const path = require("path");
+const cors = require("cors");
+require("dotenv").config(); // Assurez-vous d'avoir un fichier .env pour vos clés
 
 const app = express();
-app.use(cors());
-const PORT = process.env.PORT || 8000;
-app.use(bodyParser.json());
+const port = process.env.PORT || 5000;
 
-// Servir les fichiers statiques de l'application React
+app.use(bodyParser.json());
+app.use(cors()); // Middleware pour autoriser toutes les requêtes CORS
+
+// Serve static files from the React app
 app.use(express.static(path.join(__dirname, "build")));
 
-// Test credentials
-const merchantID = "GN1300014";
-const uniqueID = uuidv4();
-const description = "DON ONG ARLCIR";
-const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
-const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
-const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
-const devSecretKey = process.env.API_TEST_SECRET_KEY;
-const prodSecretKey = process.env.API_PROD_SECRET_KEY;
-const production_URL = process.env.API_PRODUCTION_URL;
-const developpement_URL = process.env.API_TEST_URL;
-
-// Route POST pour initier un paiement
+// Endpoint pour effectuer le paiement
 app.post("/api/makepayment", async (req, res) => {
-  // const paymentDetails = {
-  //   ...req.body,
-  //   uniqueID: uuidv4(),
-  //   description: "Test Payment",
-  //   returnUrl: req.body.returnUrl,
-  //   failUrl: req.body.failUrl,
-  //   cancelUrl: req.body.cancelUrl,
-  // };
+  const { email, firstname, lastname, phone, amount } = req.body;
 
-  const paymentDetails = {
-    ...req.body,
+  // Test credentials
+  const merchantID = "GN1300014";
+  const uniqueID = "34354543";
+  const description = "DON ONG ARLCIR";
+  const successReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+  const cancelReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+  const failureReturnUrl = "https://arlcir-guinea-87a974c63eec.herokuapp.com/";
+  const DevSecretKey = process.env.DEV_SECRET_KEY;
+  const ProdSecretKey = process.env.PROD_SECRET_KEY;
+  const ProdUrl = process.env.API_PRODUCTION_URL;
+  const TestUrl = proceww.env.API_TEST_URL;
+
+  const data = {
+    email,
+    firstname,
+    lastname,
+    phone,
     merchantID,
     uniqueID,
     description,
+    amount,
     successReturnUrl,
     cancelReturnUrl,
     failureReturnUrl,
   };
-  try {
-    const response = await axios.post(
-      production_URL,
-      paymentDetails,
 
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Secret-Key": prodSecretKey,
-        },
-      }
-    );
+  try {
+    const response = await axios.post(ProdUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "Secret-Key": ProdSecretKey,
+      },
+    });
 
     if (response.data && response.status === 200) {
       const gatewayUrl = response.data.gateway_url.replace(
@@ -75,9 +68,11 @@ app.post("/api/makepayment", async (req, res) => {
   }
 });
 
-// Pour toutes les autres requêtes, retourner l'application React
+// Route pour l'URL racine
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
