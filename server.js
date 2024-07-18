@@ -28,7 +28,7 @@ app.post("/api/makepayment", async (req, res) => {
   const DevSecretKey = process.env.DEV_SECRET_KEY;
   const ProdSecretKey = process.env.PROD_SECRET_KEY;
   const ProdUrl = process.env.API_PRODUCTION_URL;
-  const TestUrl = proceww.env.API_TEST_URL;
+  const TestUrl = process.env.API_TEST_URL;
 
   const data = {
     email,
