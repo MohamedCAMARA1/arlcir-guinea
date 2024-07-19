@@ -32,7 +32,7 @@ const FailurePage = () => {
   if (!detailsErreur) {
     return (
       <div className="text-center">
-        <p className="text-center">Chargement des détails de l'erreur...</p>;
+        <p className="text-center">Chargement des détails de l'erreur...</p>
         <a
           href="/"
           className="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
