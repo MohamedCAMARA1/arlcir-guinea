@@ -18,7 +18,8 @@ const Donation = () => {
     setError(null);
 
     // Diviser le montant par 100
-    const adjustedAmount = amount / 100;
+    // const adjustedAmount = amount / 100;
+    const adjustedAmount = amount;
 
     try {
       const response = await axios.post("/api/makepayment", {
