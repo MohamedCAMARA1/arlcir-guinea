@@ -43,7 +43,12 @@ const FailurePage = () => {
         <p className="text-center">
           Numéro de référence : {detailsErreur.reference_no}
         </p>
-        {/* Ajouter plus de détails sur l'erreur si nécessaire */}
+        <a
+          href="/"
+          className="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
+        >
+          Retour à l'accueil
+        </a>
       </div>
     </div>
   );

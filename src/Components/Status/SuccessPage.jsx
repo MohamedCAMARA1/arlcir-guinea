@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import jsPDF from "jspdf";
 
 const SuccessPage = () => {
   const location = useLocation();
@@ -29,6 +30,19 @@ const SuccessPage = () => {
     }
   }, [location.search]);
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.text("Reçu de Paiement", 20, 20);
+    doc.text(
+      `ID de transaction : ${detailsTransaction.transaction_id}`,
+      20,
+      30
+    );
+    doc.text(`Montant : ${detailsTransaction.amount}`, 20, 40);
+    doc.text(`Description : ${detailsTransaction.description}`, 20, 50);
+    doc.save("recapitulatif_paiement.pdf");
+  };
+
   if (!detailsTransaction) {
     return <p>Chargement des détails de la transaction...</p>;
   }
@@ -46,7 +60,20 @@ const SuccessPage = () => {
         <p className="text-center">
           Description : {detailsTransaction.description}
         </p>
-        {/* Ajouter d'autres détails de transaction au besoin */}
+        <div className="flex justify-center space-x-4">
+          <a
+            href="/"
+            className="mt-6 inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+          >
+            Retour à l'accueil
+          </a>
+          <button
+            onClick={generatePDF}
+            className="mt-6 inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          >
+            Télécharger le reçu
+          </button>
+        </div>
       </div>
     </div>
   );

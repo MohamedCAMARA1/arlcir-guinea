@@ -17,7 +17,12 @@ const CancelPage = () => {
         <p className="text-center">
           Raison : Paiement annulé par l'utilisateur
         </p>
-        {/* Ajouter plus de détails si nécessaire */}
+        <a
+          href="/"
+          className="mt-6 inline-block bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-700"
+        >
+          Retour à l'accueil
+        </a>
       </div>
     </div>
   );
