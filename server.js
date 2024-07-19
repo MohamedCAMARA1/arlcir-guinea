@@ -3,8 +3,7 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
-const { v4: uuidv4 } = require("uuid"); // Import de uuid
-require("dotenv").config();
+require("dotenv").config(); // Assurez-vous d'avoir un fichier .env pour vos clés
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -20,19 +19,21 @@ app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
   // Test credentials
-  const merchantID = process.env.MERCHANT_ID;
-  const uniqueID = uuidv4(); // Générer un identifiant unique
+  const merchantID = "GN1300014";
+  const uniqueID = "34354543";
   const description = "DON ONG ARLCIR";
   const successReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success-page"; // URL de redirection après succès
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/success-page";
   const cancelReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/cancel-page"; // URL de redirection après annulation
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/cancel-page";
   const failureReturnUrl =
-    "https://arlcir-guinea-87a974c63eec.herokuapp.com/failure-page"; // URL de redirection après échec
-  // const DevSecretKey = process.env.API_TEST_SECRET_KEY;
-  const ProdSecretKey = process.env.API_PROD_SECRET_KEY;
-  const ProdUrl = process.env.API_PRODUCTION_URL;
-  // const TestUrl = process.env.API_TEST_URL;
+    "https://arlcir-guinea-87a974c63eec.herokuapp.com/failure-page";
+  const DevSecretKey = process.env.DEV_SECRET_KEY;
+  const ProdSecretKey = process.env.PROD_SECRET_KEY;
+  const ProdUrl =
+    "https://gn.instantbillspay.com/instantpay/payload/bill/makepayment";
+  const TestUrl =
+    "https://main.testinstantbillspay.com.ng/instantpay/payload/bill/makepayment";
 
   const data = {
     email,
