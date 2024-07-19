@@ -13,6 +13,7 @@ import SuccessPage from "./Components/Status/SuccessPage";
 import CancelPage from "./Components/Status/CancelPage";
 import FailurePage from "./Components/Status/FailurePage";
 import NotFound from "./Components/NotFound/NotFound";
+import PrivacyPolicy from "./Components/PrivacyPolicy/PrivacyPolicy";
 
 import "./App.css";
 
@@ -30,6 +31,11 @@ function App() {
             <Route path="/a-propos" element={<About />} />
             <Route path="/nos-actions" element={<OurAction />} />
             <Route path="/contact" element={<Contact />} />
+            <Route
+              path="/politique-de-confidentialite"
+              element={<PrivacyPolicy />}
+            />{" "}
+            {/* Nouvelle route */}
             <Route path="/success-page" element={<SuccessPage />} />
             <Route path="/cancel-page" element={<CancelPage />} />
             <Route path="/failure-page" element={<FailurePage />} />
