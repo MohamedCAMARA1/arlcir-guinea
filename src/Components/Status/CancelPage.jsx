@@ -6,7 +6,7 @@ const CancelPage = () => {
   const params = new URLSearchParams(location.search);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-center">
       <div className="max-w-4xl p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-yellow-700">
           Paiement Annulé

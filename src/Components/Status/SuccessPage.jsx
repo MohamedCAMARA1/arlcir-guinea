@@ -45,7 +45,7 @@ const SuccessPage = () => {
 
   if (!detailsTransaction) {
     return (
-      <>
+      <div className="text-center">
         <p className="text-center">
           Chargement des détails de la transaction...
         </p>
@@ -55,7 +55,7 @@ const SuccessPage = () => {
         >
           Retour à l'accueil
         </a>
-      </>
+      </div>
     );
   }
 

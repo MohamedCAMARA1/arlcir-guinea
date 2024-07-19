@@ -31,7 +31,7 @@ const FailurePage = () => {
 
   if (!detailsErreur) {
     return (
-      <>
+      <div className="text-center">
         <p className="text-center">Chargement des détails de l'erreur...</p>;
         <a
           href="/"
@@ -39,7 +39,7 @@ const FailurePage = () => {
         >
           Retour à l'accueil
         </a>
-      </>
+      </div>
     );
   }
 
