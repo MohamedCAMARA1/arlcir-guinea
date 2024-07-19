@@ -44,7 +44,19 @@ const SuccessPage = () => {
   };
 
   if (!detailsTransaction) {
-    return <p>Chargement des détails de la transaction...</p>;
+    return (
+      <>
+        <p className="text-center">
+          Chargement des détails de la transaction...
+        </p>
+        <a
+          href="/"
+          className="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
+        >
+          Retour à l'accueil
+        </a>
+      </>
+    );
   }
 
   return (

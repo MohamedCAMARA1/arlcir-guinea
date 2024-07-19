@@ -3,7 +3,7 @@ import axios from "axios";
 import { ClipLoader } from "react-spinners"; // Import du composant ClipLoader
 import donation_hands from "../../Assets/donation_hands.jpeg";
 
-const DonationForm = () => {
+const Donation = () => {
   const [amount, setAmount] = useState("");
   const [email, setEmail] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -17,13 +17,16 @@ const DonationForm = () => {
     setLoading(true);
     setError(null);
 
+    // Diviser le montant par 100
+    const adjustedAmount = amount / 100;
+
     try {
       const response = await axios.post("/api/makepayment", {
         email,
         firstname,
         lastname,
         phone,
-        amount,
+        amount: adjustedAmount,
       });
 
       if (response.data && response.data.gatewayUrl) {
@@ -61,7 +64,7 @@ const DonationForm = () => {
             {error && <p className="text-red-500 text-center">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
-                type="text"
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
@@ -85,7 +88,7 @@ const DonationForm = () => {
                 required
               />
               <input
-                type="text"
+                type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Numéro de téléphone"
@@ -95,9 +98,7 @@ const DonationForm = () => {
               <input
                 type="number"
                 value={amount}
-                // on conserve la raie valeur saisie pr l'utilisateur en divisant par 1O0
-                // il y a un rapport de 1/100
-                onChange={(e) => setAmount(e.target.value / 100)}
+                onChange={(e) => setAmount(e.target.value)}
                 placeholder="Montant"
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -121,4 +122,4 @@ const DonationForm = () => {
   );
 };
 
-export default DonationForm;
+export default Donation;
