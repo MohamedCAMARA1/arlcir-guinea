@@ -18,7 +18,12 @@ const Donation = () => {
     setLoading(true);
     setError(null);
 
-    const adjustedAmount = amount / 100;
+    // Vérification du montant minimum
+    if (amount < 1) {
+      setError("Le montant minimum pour un don est de 1 franc guinéen.");
+      setLoading(false);
+      return;
+    }
 
     // Valeurs par défaut pour les dons anonymes
     const anonymousValues = {
@@ -34,13 +39,13 @@ const Donation = () => {
         firstname: isAnonymous ? anonymousValues.firstname : firstname,
         lastname: isAnonymous ? anonymousValues.lastname : lastname,
         phone: isAnonymous ? anonymousValues.phone : phone,
-        amount: adjustedAmount,
+        amount, // Utiliser le montant directement
       });
 
       if (response.data && response.data.gatewayUrl) {
         window.location.href = response.data.gatewayUrl;
       } else {
-        setError("Failed to initialize payment.");
+        setError("Échec de l'initialisation du paiement.");
       }
     } catch (error) {
       setError(error.message);
@@ -116,6 +121,8 @@ const Donation = () => {
                   />
                 </>
               )}
+
+              {/* la somme minimum est de 1 FGN */}
               <input
                 type="number"
                 value={amount}
@@ -123,6 +130,7 @@ const Donation = () => {
                 placeholder="Montant"
                 className="w-full p-2 border border-gray-300 rounded"
                 required
+                min="1"
               />
               <button
                 type="submit"
