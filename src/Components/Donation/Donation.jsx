@@ -18,7 +18,7 @@ const Donation = () => {
     setError(null);
 
     // Diviser le montant par 100
-    // const adjustedAmount = amount / 100;
+    const adjustedAmount = amount / 100;
 
     try {
       const response = await axios.post("/api/makepayment", {
@@ -26,8 +26,7 @@ const Donation = () => {
         firstname,
         lastname,
         phone,
-        amount,
-        // amount: adjustedAmount,
+        amount: adjustedAmount,
       });
 
       if (response.data && response.data.gatewayUrl) {
