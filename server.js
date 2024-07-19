@@ -3,6 +3,7 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
+const { v4: uuidv4 } = require("uuid"); // Import de uuid
 require("dotenv").config(); // Assurez-vous d'avoir un fichier .env pour vos clés
 
 const app = express();
@@ -19,8 +20,8 @@ app.post("/api/makepayment", async (req, res) => {
   const { email, firstname, lastname, phone, amount } = req.body;
 
   // Test credentials
-  const merchantID = "GN1300014";
-  const uniqueID = "34354543";
+  const merchantID = process.env.MERCHANT_ID;
+  const uniqueID = uuidv4(); // Générer un identifiant unique
   const description = "DON ONG ARLCIR";
   const successReturnUrl =
     "https://arlcir-guinea-87a974c63eec.herokuapp.com/success-page";

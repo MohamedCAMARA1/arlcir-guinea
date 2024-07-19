@@ -9,6 +9,7 @@ const Donation = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [phone, setPhone] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false); // Nouveau state pour le don anonyme
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -17,16 +18,22 @@ const Donation = () => {
     setLoading(true);
     setError(null);
 
-    // Diviser le montant par 100
-    // const adjustedAmount = amount / 100;
-    const adjustedAmount = amount;
+    const adjustedAmount = amount / 100;
+
+    // Valeurs par défaut pour les dons anonymes
+    const anonymousValues = {
+      email: "lambe.khili@gmail.com",
+      firstname: "Lambé",
+      lastname: "Khili",
+      phone: "613000000",
+    };
 
     try {
       const response = await axios.post("/api/makepayment", {
-        email,
-        firstname,
-        lastname,
-        phone,
+        email: isAnonymous ? anonymousValues.email : email,
+        firstname: isAnonymous ? anonymousValues.firstname : firstname,
+        lastname: isAnonymous ? anonymousValues.lastname : lastname,
+        phone: isAnonymous ? anonymousValues.phone : phone,
         amount: adjustedAmount,
       });
 
@@ -64,38 +71,51 @@ const Donation = () => {
             </h2>
             {error && <p className="text-red-500 text-center">{error}</p>}
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <input
-                type="text"
-                value={firstname}
-                onChange={(e) => setFirstname(e.target.value)}
-                placeholder="Prénom"
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <input
-                type="text"
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
-                placeholder="Nom"
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Numéro de téléphone"
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
+              <label className="block text-center">
+                <input
+                  type="checkbox"
+                  checked={isAnonymous}
+                  onChange={(e) => setIsAnonymous(e.target.checked)}
+                  className="mr-2"
+                />
+                Don Anonyme
+              </label>
+              {!isAnonymous && (
+                <>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
+                  <input
+                    type="text"
+                    value={firstname}
+                    onChange={(e) => setFirstname(e.target.value)}
+                    placeholder="Prénom"
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
+                  <input
+                    type="text"
+                    value={lastname}
+                    onChange={(e) => setLastname(e.target.value)}
+                    placeholder="Nom"
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Numéro de téléphone"
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
+                </>
+              )}
               <input
                 type="number"
                 value={amount}
