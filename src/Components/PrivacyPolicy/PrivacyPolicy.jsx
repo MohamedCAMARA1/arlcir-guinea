@@ -69,8 +69,15 @@ const PrivacyPolicy = () => {
       <p>
         Si vous avez des questions concernant cette politique de confidentialité
         et d'anonymat, vous pouvez nous contacter à l'adresse suivante :{" "}
-        <a href="mailto:contact@votreong.com" className="text-blue-600">
-          contact@votreong.com
+        <a
+          href="mailto:ong.preventionroutiereguinee@gmail.com"
+          className="text-blue-600"
+        >
+          ong.preventionroutiereguinee@gmail.com
+        </a>
+        ou encore
+        <a href="mailto:contact@arlcir.com" className="text-blue-600">
+          contact@arlcir.com
         </a>
         .
       </p>

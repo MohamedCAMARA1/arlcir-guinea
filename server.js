@@ -58,7 +58,7 @@ app.post("/api/makepayment", async (req, res) => {
       },
     });
 
-    if (response.data && response.status === 200) {
+    if (response.data && response.data.gateway_url) {
       const gatewayUrl = response.data.gateway_url.replace(
         "http://",
         "https://"
@@ -66,11 +66,13 @@ app.post("/api/makepayment", async (req, res) => {
       res.json({ gatewayUrl });
     } else {
       console.error("Payment initialization failed:", response.data);
-      res.status(response.status).json({ message: response.data.message });
+      res
+        .status(response.status)
+        .json({ message: "Failed to initialize payment." });
     }
   } catch (error) {
     console.error("Error making payment:", error.message);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Internal server error." });
   }
 });
 
