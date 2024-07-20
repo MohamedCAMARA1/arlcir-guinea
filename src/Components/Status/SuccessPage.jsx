@@ -16,7 +16,7 @@ const SuccessPage = () => {
         const response = await axios.get(
           `https://gn.instantbillspay.com/api/bill/trans_status?transaction_id=${transactionID}`
         );
-        setDetailsTransaction(response.data);
+        setDetailsTransaction(response.data.Response);
       } catch (error) {
         console.error(
           "Erreur lors de la récupération des détails de la transaction :",
@@ -31,27 +31,29 @@ const SuccessPage = () => {
   }, [location.search]);
 
   const generatePDF = () => {
-    const doc = new jsPDF();
-    doc.text("Reçu de Paiement", 20, 20);
-    doc.text(
-      `ID de transaction : ${detailsTransaction.transaction_id}`,
-      20,
-      30
-    );
-    doc.text(`Montant : ${detailsTransaction.amount}`, 20, 40);
-    doc.text(`Description : ${detailsTransaction.description}`, 20, 50);
-    doc.save("recapitulatif_paiement.pdf");
+    if (detailsTransaction) {
+      const doc = new jsPDF();
+      doc.text("Reçu de Paiement", 20, 20);
+      doc.text(
+        `ID de transaction : ${detailsTransaction.transaction_id}`,
+        20,
+        30
+      );
+      doc.text(`Montant : ${detailsTransaction.amount}`, 20, 40);
+      doc.text(`Description : ${detailsTransaction.description}`, 20, 50);
+      doc.text(`Nom du client : ${detailsTransaction.customer_name}`, 20, 60);
+      doc.text(`Email : ${detailsTransaction.email}`, 20, 70);
+      doc.save("recapitulatif_paiement.pdf");
+    }
   };
 
   if (!detailsTransaction) {
     return (
       <div className="text-center">
-        <p className="text-center">
-          Chargement des détails de la transaction...
-        </p>
+        <p>Chargement des détails de la transaction...</p>
         <a
           href="/"
-          className="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
+          className="mt-6 inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
         >
           Retour à l'accueil
         </a>
@@ -72,6 +74,10 @@ const SuccessPage = () => {
         <p className="text-center">
           Description : {detailsTransaction.description}
         </p>
+        <p className="text-center">
+          Nom du client : {detailsTransaction.customer_name}
+        </p>
+        <p className="text-center">Email : {detailsTransaction.email}</p>
         <div className="flex justify-center space-x-4">
           <a
             href="/"
