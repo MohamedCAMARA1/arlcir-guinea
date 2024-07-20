@@ -5,15 +5,16 @@ import axios from "axios";
 const FailurePage = () => {
   const location = useLocation();
   const [detailsErreur, setDetailsErreur] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const refID = params.get("refNo");
+    const uniqueID = params.get("uniqueID");
 
     const getErreurDetails = async () => {
       try {
         const response = await axios.get(
-          `https://gn.instantbillspay.com/api/bill/refstatus?ref=${refID}`
+          `https://gn.instantbillspay.com/api/bill/trans_status_muid?merchantID=${process.env.MERCHANT_ID}&uniqueID=${uniqueID}`
         );
         setDetailsErreur(response.data.Response);
       } catch (error) {
@@ -21,15 +22,17 @@ const FailurePage = () => {
           "Erreur lors de la récupération des détails de l'erreur :",
           error
         );
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (refID) {
+    if (uniqueID) {
       getErreurDetails();
     }
   }, [location.search]);
 
-  if (!detailsErreur) {
+  if (loading) {
     return (
       <div className="text-center">
         <p>Chargement des détails de l'erreur...</p>
@@ -49,9 +52,12 @@ const FailurePage = () => {
         <h2 className="text-2xl font-bold text-center text-red-700">
           Paiement Échoué
         </h2>
-        <p className="text-center">Erreur : {detailsErreur.info}</p>
         <p className="text-center">
-          Numéro de référence : {detailsErreur.reference_no}
+          Erreur : {detailsErreur ? detailsErreur.info : "Non disponible"}
+        </p>
+        <p className="text-center">
+          Numéro de référence :{" "}
+          {detailsErreur ? detailsErreur.reference_no : "Non disponible"}
         </p>
         <a
           href="/"

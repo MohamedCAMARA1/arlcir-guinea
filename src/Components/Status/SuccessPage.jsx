@@ -6,15 +6,16 @@ import jsPDF from "jspdf";
 const SuccessPage = () => {
   const location = useLocation();
   const [detailsTransaction, setDetailsTransaction] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const transactionID = params.get("transaction_id");
+    const uniqueID = params.get("uniqueID");
 
     const getTransactionDetails = async () => {
       try {
         const response = await axios.get(
-          `https://gn.instantbillspay.com/api/bill/trans_status?transaction_id=${transactionID}`
+          `https://gn.instantbillspay.com/api/bill/trans_status_muid?merchantID=${process.env.MERCHANT_ID}&uniqueID=${uniqueID}`
         );
         setDetailsTransaction(response.data.Response);
       } catch (error) {
@@ -22,10 +23,12 @@ const SuccessPage = () => {
           "Erreur lors de la récupération des détails de la transaction :",
           error
         );
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (transactionID) {
+    if (uniqueID) {
       getTransactionDetails();
     }
   }, [location.search]);
@@ -47,10 +50,24 @@ const SuccessPage = () => {
     }
   };
 
-  if (!detailsTransaction) {
+  if (loading) {
     return (
       <div className="text-center">
         <p>Chargement des détails de la transaction...</p>
+        <a
+          href="/"
+          className="mt-6 inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+        >
+          Retour à l'accueil
+        </a>
+      </div>
+    );
+  }
+
+  if (!detailsTransaction) {
+    return (
+      <div className="text-center">
+        <p>Impossible de récupérer les détails de la transaction.</p>
         <a
           href="/"
           className="mt-6 inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
