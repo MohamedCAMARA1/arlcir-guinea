@@ -20,7 +20,7 @@ const Donation = () => {
 
     // Vérification du montant minimum
     if (amount < 1) {
-      setError("Le montant minimum pour un don est de 1 franc guinéen.");
+      setError("Le montant minimum pour un don est de 1 GNF (Franc Guinéen).");
       setLoading(false);
       return;
     }
@@ -39,7 +39,7 @@ const Donation = () => {
         firstname: isAnonymous ? anonymousValues.firstname : firstname,
         lastname: isAnonymous ? anonymousValues.lastname : lastname,
         phone: isAnonymous ? anonymousValues.phone : phone,
-        amount, // Utiliser le montant directement
+        amount, // Utiliser le montant directement --> en attendant la confirmation d'un rapport de conversion de 1/100 e
       });
 
       if (response.data && response.data.gatewayUrl) {

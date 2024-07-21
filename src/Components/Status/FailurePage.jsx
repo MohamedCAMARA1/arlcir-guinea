@@ -9,12 +9,12 @@ const FailurePage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const uniqueID = params.get("uniqueID");
+    const transactionID = params.get("transaction_id");
 
     const getErreurDetails = async () => {
       try {
         const response = await axios.get(
-          `https://gn.instantbillspay.com/api/bill/trans_status_muid?merchantID=${process.env.MERCHANT_ID}&uniqueID=${uniqueID}`
+          `https://gn.instantbillspay.com/api/bill/trans_status?transaction_id=${transactionID}`
         );
         setDetailsErreur(response.data.Response);
       } catch (error) {
@@ -27,7 +27,7 @@ const FailurePage = () => {
       }
     };
 
-    if (uniqueID) {
+    if (transactionID) {
       getErreurDetails();
     }
   }, [location.search]);
@@ -52,13 +52,49 @@ const FailurePage = () => {
         <h2 className="text-2xl font-bold text-center text-red-700">
           Paiement Échoué
         </h2>
-        <p className="text-center">
-          Erreur : {detailsErreur ? detailsErreur.info : "Non disponible"}
-        </p>
-        <p className="text-center">
-          Numéro de référence :{" "}
-          {detailsErreur ? detailsErreur.reference_no : "Non disponible"}
-        </p>
+        {detailsErreur ? (
+          <div className="space-y-4">
+            <p className="text-center">
+              <strong>Statut:</strong> {detailsErreur.status}
+            </p>
+            <p className="text-center">
+              <strong>Info:</strong> {detailsErreur.info}
+            </p>
+            <p className="text-center">
+              <strong>Email:</strong> {detailsErreur.email || "Non disponible"}
+            </p>
+            <p className="text-center">
+              <strong>Nom du marchand:</strong> {detailsErreur.merchant_name}
+            </p>
+            <p className="text-center">
+              <strong>ID unique:</strong> {detailsErreur.unique_id}
+            </p>
+            <p className="text-center">
+              <strong>Description:</strong> {detailsErreur.description}
+            </p>
+            <p className="text-center">
+              <strong>Nom du client:</strong>{" "}
+              {detailsErreur.customer_name || "Non disponible"}
+            </p>
+            <p className="text-center">
+              <strong>Numéro de référence:</strong> {detailsErreur.reference_no}
+            </p>
+            <p className="text-center">
+              <strong>Code de la monnaie:</strong> {detailsErreur.currency_code}
+            </p>
+            <p className="text-center">
+              <strong>Montant:</strong> {detailsErreur.amount}
+            </p>
+            <p className="text-center">
+              <strong>ID de transaction:</strong> {detailsErreur.transaction_id}
+            </p>
+            <p className="text-center">
+              <strong>Code d'approbation:</strong> {detailsErreur.approval_code}
+            </p>
+          </div>
+        ) : (
+          <p className="text-center">Détails de l'erreur non disponibles.</p>
+        )}
         <a
           href="/"
           className="mt-6 inline-block bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700"
